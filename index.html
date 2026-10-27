@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>百花王學園 · 狂賭之淵</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0910'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%23f0c05a' font-family='serif'%3E%E8%B3%AD%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="ambient" aria-hidden="true"></div>
+
+<div id="app">
+  <header id="topbar">
+    <button class="brand" id="brand-home" title="回到大廳">
+      <span class="brand-mark">賭</span>
+      <span class="brand-text"><b>百花王學園</b><small>HYAKKAOU ACADEMY</small></span>
+    </button>
+    <div class="hud">
+      <div class="hud-item">
+        <span class="hud-label">籌碼</span>
+        <b id="hud-cash" data-currency="1">NT$ 0</b>
+      </div>
+      <div class="hud-item debt">
+        <span class="hud-label">家畜債務<em id="hud-due">退學倒數 14 天</em></span>
+        <b id="hud-debt" data-currency="1">NT$ 0</b>
+        <i class="debt-mini"><s id="hud-debt-fill"></s></i>
+      </div>
+      <div class="hud-item interest">
+        <span class="hud-label">午夜計息</span>
+        <b id="hud-interest">+ NT$ 0</b>
+      </div>
+      <div class="hud-item time">
+        <span class="hud-label">學園時間</span>
+        <b id="hud-time">第 1 天 20:00</b>
+      </div>
+      <div class="hud-item credit">
+        <span class="hud-label">學園階級</span>
+        <b id="hud-credit">50</b>
+        <i class="credit-bar"><s id="hud-credit-fill"></s></i>
+      </div>
+      <div class="hud-item rank hidden" id="hud-rank">學生</div>
+    </div>
+    <div class="top-actions">
+      <button id="btn-loan" class="btn small gold">債務</button>
+      <button id="btn-sound" class="btn small ghost icon" title="音效開關">♪</button>
+      <button id="btn-menu" class="btn small ghost icon" title="設定與說明">≡</button>
+    </div>
+  </header>
+
+  <aside id="sidenav">
+    <button class="nav-item active" data-view="lobby"><span>◆</span>學園大廳</button>
+    <div class="nav-sep">公式戰</div>
+    <button class="nav-item" data-view="council"><span>♛</span>學生會</button>
+    <button class="nav-item locked" data-view="school"><span>♜</span>學生會室<em>未解鎖</em></button>
+    <div class="nav-sep">校園</div>
+    <button class="nav-item" data-view="people"><span>人</span>人物互動</button>
+    <div class="nav-sep">賭桌</div>
+    <button class="nav-item" data-view="holdem"><span>♠</span>德州撲克</button>
+    <button class="nav-item" data-view="blackjack"><span>♦</span>21 點</button>
+    <button class="nav-item" data-view="niuniu"><span>★</span>妞妞</button>
+    <button class="nav-item" data-view="setpoker"><span>♣</span>十三支</button>
+    <button class="nav-item" data-view="threecard"><span>♤</span>三張牌</button>
+    <div class="nav-sep">快桌</div>
+    <button class="nav-item" data-view="sicbo"><span>⚂</span>骰寶</button>
+    <button class="nav-item" data-view="slots"><span>▦</span>拉霸機</button>
+    <button class="nav-item" data-view="scratch"><span>▤</span>刮刮樂</button>
+    <button class="nav-item" data-view="pachinko"><span>◉</span>小鋼珠</button>
+    <button class="nav-item" data-view="mahjong"><span>中</span>二人麻將</button>
+    <button class="nav-item" data-view="votingscissors"><span>拳</span>投票猜拳</button>
+    <div class="nav-sep">其他</div>
+    <button class="nav-item" data-view="loans"><span>¥</span>債務中心</button>
+    <button class="nav-item" id="nav-story"><span>!</span>劇情線索</button>
+    <div class="nav-foot">
+      <div class="save-state" id="save-state">已自動存檔</div>
+      <div class="ver">v2.0 · 狂賭之淵</div>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="view active" id="view-lobby">
+      <div class="lobby-hero">
+        <div class="hero-glow"></div>
+        <div class="hero-copy">
+          <div class="chapter-tag" id="lobby-chapter">序章 · 家畜</div>
+          <h1>狂賭之淵</h1>
+          <p id="lobby-story">百花王學園裡，金錢不是籌碼，是階級。你簽下那張一千萬的本票，名字被寫進家畜名冊，退學倒數十四天。</p>
+          <div class="debt-track"><i id="debt-fill"></i></div>
+          <div class="debt-meta">
+            <span id="lobby-debt">家畜債務 NT$ 10,000,000</span>
+            <span id="lobby-due">退學期限：第 14 天</span>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="hero-stat"><span>今日目標</span><b id="hero-goal">先從家畜名單爬出來</b></div>
+          <div class="hero-stat"><span>還款進度</span><b id="hero-progress">0%</b></div>
+          <div class="hero-stat"><span>今日利息</span><b id="hero-daily">+ NT$ 0</b></div>
+          <div class="hero-stat"><span>牌桌勝場</span><b id="hero-wins">0</b></div>
+          <div class="hero-stat"><span>單局最高</span><b id="hero-best" data-currency="1">NT$ 0</b></div>
+          <div class="hero-actions">
+            <button class="btn gold" id="lobby-pay">還款</button>
+            <button class="btn ghost" id="lobby-story-btn">看劇情</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head council-head">
+        <h2>支線任務 · 公式戰</h2>
+        <span id="council-head-note">五位成員任你挑一位，下注沒有上限。贏了，家畜債務一筆勾銷。</span>
+        <div class="spacer"></div>
+        <button class="btn small ghost" id="council-more">進入學生會</button>
+      </div>
+      <div class="council-strip" id="council-strip"></div>
+
+      <div class="section-head">
+        <h2>選擇賭桌</h2>
+        <span>莊家抽水很輕，前提是你還能笑著走出學園。</span>
+      </div>
+      <div class="game-grid" id="game-grid"></div>
+
+      <div class="lobby-bottom">
+        <div class="panel journal-panel">
+          <div class="panel-head"><h3>學園記事</h3><span id="journal-count">0 則</span></div>
+          <div class="journal-list" id="lobby-journal"></div>
+        </div>
+        <div class="panel tip-panel">
+          <div class="tip-avatar">夢</div>
+          <div>
+            <div class="tip-name">蛇喰夢子 · 轉學生</div>
+            <p id="lobby-tip">「輸錢不可怕喔。可怕的是，你還沒真正愛上賭博。」</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-holdem"></section>
+    <section class="view" id="view-blackjack"></section>
+    <section class="view" id="view-niuniu"></section>
+    <section class="view" id="view-setpoker"></section>
+    <section class="view" id="view-threecard"></section>
+    <section class="view" id="view-sicbo"></section>
+    <section class="view" id="view-slots"></section>
+    <section class="view" id="view-scratch"></section>
+    <section class="view" id="view-pachinko"></section>
+    <section class="view" id="view-mahjong"></section>
+    <section class="view" id="view-votingscissors"></section>
+    <section class="view" id="view-people"></section>
+    <section class="view" id="view-council"></section>
+    <section class="view" id="view-school"></section>
+    <section class="view" id="view-loans"></section>
+  </main>
+</div>
+
+<div id="story-layer" class="story-layer hidden">
+  <div class="story-box">
+    <button type="button" class="story-skip" id="story-skip">跳過這段對話 ▸▸</button>
+    <div class="story-avatar" id="story-avatar">夢</div>
+    <div class="story-main">
+      <div class="story-name" id="story-name">蛇喰夢子</div>
+      <p class="story-text" id="story-text"></p>
+      <div class="story-actions" id="story-actions"></div>
+      <div class="story-hint" id="story-hint">點擊繼續 ▸</div>
+    </div>
+  </div>
+</div>
+
+<div id="ending-layer" class="ending-layer hidden">
+  <div class="ending-inner">
+    <div class="ending-kicker" id="ending-kicker">ENDING</div>
+    <h1 id="ending-title">家畜名冊，除名</h1>
+    <p id="ending-text"></p>
+    <div class="ending-stats" id="ending-stats"></div>
+    <div class="ending-actions" id="ending-actions"></div>
+  </div>
+</div>
+
+<div id="splash" class="splash">
+  <div class="splash-inner">
+    <div class="splash-mark">賭</div>
+    <h1>狂賭之淵</h1>
+    <p class="splash-sub">百花王學園 · HYAKKAOU ACADEMY</p>
+    <p class="splash-note">在這裡，賭博不是娛樂，是階級。<br>輸了，就會被寫進家畜名冊。</p>
+    <div class="splash-actions">
+      <button id="btn-continue" class="btn gold big hidden">繼續遊戲</button>
+      <button id="btn-new" class="btn ghost big">新遊戲</button>
+    </div>
+    <p class="splash-small">本作為單機娛樂，所有賭局與金錢皆為虛擬。</p>
+  </div>
+</div>
+
+<div id="overlay-root"></div>
+<div id="toast-root"></div>
+
+<script>
+(function () {
+  function fallback(html) {
+    var splash = document.getElementById('splash');
+    if (!splash) return;
+    var actions = splash.querySelector('.splash-actions');
+    if (!actions || actions.dataset.fallback === '1') return;
+    actions.dataset.fallback = '1';
+    actions.innerHTML = '<div class="splash-fallback">' + html + '</div>';
+  }
+  setTimeout(function () {
+    if (window.__JINHE__) return;
+    if (location.protocol === 'file:') {
+      fallback(
+        '遊戲程式需要透過本機伺服器載入，直接雙擊 index.html 不會執行。<br>' +
+        '請關閉此頁，回到資料夾雙擊 <b>start.bat</b>，<br>' +
+        '瀏覽器會自動開啟 <b>https://127.0.0.1:8443/</b>。' +
+        '<br><a class="btn gold" href="https://127.0.0.1:8443/">連線到本機伺服器</a>'
+      );
+    } else {
+      fallback(
+        '遊戲程式沒有載入成功，請重新整理本頁。<br>' +
+        '若仍然沒有反應，關閉此頁並重新執行 <b>start.bat</b>。'
+      );
+    }
+  }, 1800);
+})();
+</script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
